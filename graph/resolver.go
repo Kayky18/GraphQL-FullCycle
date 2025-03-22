@@ -8,4 +8,5 @@ import "github.com/Kayky18/GraphQL-FullCycle/internal/database"
 
 type Resolver struct {
 	CategoryDB database.Category
+	CourseDB   database.Course
 }

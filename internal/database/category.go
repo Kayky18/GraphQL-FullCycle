@@ -18,6 +18,7 @@ func NewCategory(db *sql.DB) *Category {
 }
 
 func (c *Category) Create(name string, description string) (Category, error) {
+
 	id := uuid.New().String()
 	_, err := c.db.Exec("INSERT INTO categories (id, name, description) VALUES ($1, $2, $3)", id, name, description)
 
@@ -44,4 +45,15 @@ func (c *Category) FindAll() ([]Category, error) {
 		categories = append(categories, Category{ID: id, Name: name, Description: description})
 	}
 	return categories, nil
+}
+
+func (c *Category) FindByCourseId(id string) (Category, error) {
+	var id_c, name, description string
+
+	err := c.db.QueryRow("SELECT c.id, c.name, c.description FROM categories c JOIN courses co ON c.id = co.category_id WHERE co.id = $1", id).Scan(&id_c, &name, &description)
+
+	if err != nil {
+		return Category{}, err
+	}
+	return Category{ID: id_c, Name: name, Description: description}, nil
 }
